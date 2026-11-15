@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Editor / Tooling (lokal, nicht versionieren)
+.vscode/
+.claude/
+.swiftpm/
+xcuserdata/
+
+# Swift Package Manager
+.build/
+
+# Kundida Toolbox: erzeugtes App-Bundle / Distribution
+build/
+*.zip
+*.dmg

@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # GitHub-Actions (auch SHA-gepinnte) aktuell halten.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "security"]
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # SwiftPM: Sparkle installiert mit den Rechten der App fremden Code –
+  # Sicherheitsupdates hier besonders wichtig.
+  - package-ecosystem: "swift"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "security"]

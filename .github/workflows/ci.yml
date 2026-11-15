@@ -1,0 +1,44 @@
+name: CI
+
+# macOS-Runner kosten den 10-fachen Minutenfaktor: ein einziger Job.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**/*.md", "LICENSE", ".github/ISSUE_TEMPLATE/**"]
+  pull_request:
+    branches: [main]
+    paths-ignore: ["**/*.md", "LICENSE", ".github/ISSUE_TEMPLATE/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: Build & Bundle (macOS)
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: latest-stable
+
+      - name: Build (Debug)
+        run: swift build
+
+      - name: App-Bundle bauen
+        run: Scripts/make_app.sh
+
+      - name: Bundle prüfen
+        run: |
+          test -x build/KundidaToolbox.app/Contents/MacOS/KundidaToolbox
+          test -d build/KundidaToolbox.app/Contents/Frameworks/Sparkle.framework
+          codesign --verify --deep --strict build/KundidaToolbox.app

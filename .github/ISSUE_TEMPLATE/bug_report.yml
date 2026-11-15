@@ -1,0 +1,45 @@
+name: 🐞 Fehler melden
+description: Einen reproduzierbaren Fehler in der Kundida Toolbox melden
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deinen Bericht! Bitte **keine Sicherheitslücken** hier melden –
+        dafür gibt es [SECURITY.md](../blob/main/SECURITY.md).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Beschreibung
+      description: Was ist passiert? Was hast du stattdessen erwartet?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zur Reproduktion
+      placeholder: |
+        1. …
+        2. …
+        3. Fehler tritt auf
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Betroffene App
+      description: Bei welcher App tritt der Fehler auf (z. B. Forseti, Perun)?
+  - type: input
+    id: version
+    attributes:
+      label: Toolbox-Version
+      description: Steht in den Einstellungen unter „Über“, z. B. „1.0 (2026.11.15.2203)“.
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS-Version & Hardware
+      placeholder: "z. B. macOS 27.2, Apple M3"
+    validations:
+      required: true
