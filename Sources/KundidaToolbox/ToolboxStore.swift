@@ -48,6 +48,25 @@ final class ToolboxStore {
         loadCachedCatalog()
         rescan()
         Task { await startScheduler() }
+        watchInstalledApps()
+    }
+
+    /// Installierte Versionen aktuell halten: Apps aktualisieren sich auch selbst (Sparkle)
+    /// oder über den App Store. Ohne erneutes Einlesen zeigte die Menüleiste veraltete Updates.
+    private func watchInstalledApps() {
+        let center = NSWorkspace.shared.notificationCenter
+        for name in [NSWorkspace.didLaunchApplicationNotification, NSWorkspace.didTerminateApplicationNotification, NSWorkspace.didWakeNotification] {
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.rescan() }
+            }
+        }
+        // Updates ohne Start/Beenden (z. B. App Store im Hintergrund): günstige Prüfung je Minute.
+        Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(60))
+                self?.rescan()
+            }
+        }
     }
 
     // MARK: - Abgeleitete Werte

@@ -36,6 +36,8 @@ struct ToolboxView: View {
         }
         .frame(width: 380, height: 680)
         .onAppear { store.rescan() }
+        // Das Menüleisten-Fenster bleibt erhalten; onAppear feuert nur beim ersten Öffnen.
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in store.rescan() }
     }
 
     // MARK: Kopf
@@ -437,7 +439,7 @@ struct ToolRow: View {
                     detail("Verfügbar", [r.version, store.availableBuild(tool).map { "(\($0))" }].compactMap { $0 }.joined(separator: " "))
                 }
                 if let app { detail("Installiert", app.build.isEmpty || app.build == app.version ? app.version : "\(app.version) (\(app.build))") }
-                if !appStore, let date = r.date { detail("Veröffentlicht", date) }
+                if !appStore, let date = r.date { detail("Veröffentlicht", Self.germanDate(date)) }
                 if !appStore, let size = r.size { detail("Größe", size) }
                 if let minOS = r.minOS { detail("Voraussetzung", minOS) }
                 if let arch = r.arch { detail("Architektur", arch) }
@@ -465,6 +467,15 @@ struct ToolRow: View {
         .padding(.leading, 63)
         .padding(.trailing, 14)
         .padding(.bottom, 10)
+    }
+
+    /// "2026-11-21" → "21. November 2026"
+    private static func germanDate(_ iso: String) -> String {
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        parser.dateFormat = "yyyy-MM-dd"
+        guard let date = parser.date(from: String(iso.prefix(10))) else { return iso }
+        return date.formatted(.dateTime.day().month(.wide).year().locale(Locale(identifier: "de_DE")))
     }
 
     private func detail(_ label: String, _ value: String) -> some View {

@@ -27,3 +27,9 @@ und das Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **Selbstaktualisierung** über Sparkle, wie bei Forseti.
 - **Einstellungen:** Beim Anmelden starten, regelmäßige Update-Prüfung,
   Installationsort, Download-Quelle (auch lokaler Ordner).
+
+### Behoben
+- Die Menüleiste zeigte Updates an, obwohl die Apps bereits aktuell waren:
+  Installierte Versionen werden jetzt beim Öffnen des Fensters, beim Starten
+  und Beenden von Apps, nach dem Ruhezustand und minütlich neu eingelesen.
+- Veröffentlichungsdaten in den Details auf Deutsch („21. November 2026“).
